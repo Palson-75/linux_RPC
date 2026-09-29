@@ -5,7 +5,7 @@
 int main()
 {
     CLIENT *client;
-    StudentRequest request;
+    Student student;
     StudentResponse *response;
 
     client = clnt_create("localhost",
@@ -19,9 +19,13 @@ int main()
         exit(1);
     }
 
-    request.id = 101;
+    student.id = 101;
 
-    response = delete_student_1(&request, client);
+    student.name = "Palson";
+    student.department = "CSE";
+    student.cgpa = 8.50;
+
+    response = add_student_1(&student, client);
 
     if (response == NULL)
     {

@@ -3,13 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DATABASE_FILE "serverstorage/students.dat"
+#define TEMP_FILE "serverstorage/students_temp.dat"
+
+
 StudentResponse *add_student_1_svc(Student *student, struct svc_req *req)
 {
     static StudentResponse response;
 
     memset(&response, 0, sizeof(response));
 
-    FILE *file = fopen("students.dat", "a");
+    FILE *file = fopen(DATABASE_FILE, "a");
 
     if (file == NULL)
     {
@@ -46,7 +50,7 @@ StudentResponse *search_student_1_svc(StudentRequest *request, struct svc_req *r
 
     memset(&response, 0, sizeof(response));
 
-    FILE *file = fopen("students.dat", "r");
+    FILE *file = fopen(DATABASE_FILE, "r");
 
     if (file == NULL)
     {
@@ -97,12 +101,11 @@ StudentResponse *search_student_1_svc(StudentRequest *request, struct svc_req *r
 StudentResponse *update_student_1_svc(Student *student, struct svc_req *req)
 {
     static StudentResponse response;
-    static char temp_file[] = "students_temp.dat";
 
     memset(&response, 0, sizeof(response));
 
-    FILE *file = fopen("students.dat", "r");
-    FILE *temp = fopen(temp_file, "w");
+    FILE *file = fopen(DATABASE_FILE, "r");
+    FILE *temp = fopen(TEMP_FILE, "w");
 
     if (file == NULL || temp == NULL)
     {
@@ -157,8 +160,8 @@ StudentResponse *update_student_1_svc(Student *student, struct svc_req *req)
 
     if (found)
     {
-        remove("students.dat");
-        rename(temp_file, "students.dat");
+        remove(DATABASE_FILE);
+        rename(TEMP_FILE, DATABASE_FILE);
 
         response.success = 1;
         response.message = strdup("Student updated successfully");
@@ -170,7 +173,7 @@ StudentResponse *update_student_1_svc(Student *student, struct svc_req *req)
     }
     else
     {
-        remove(temp_file);
+        remove(TEMP_FILE);
 
         response.success = 0;
         response.message = strdup("Student not found");
@@ -185,12 +188,11 @@ StudentResponse *update_student_1_svc(Student *student, struct svc_req *req)
 StudentResponse *delete_student_1_svc(StudentRequest *request, struct svc_req *req)
 {
     static StudentResponse response;
-    static char temp_file[] = "students_temp.dat";
 
     memset(&response, 0, sizeof(response));
 
-    FILE *file = fopen("students.dat", "r");
-    FILE *temp = fopen(temp_file, "w");
+    FILE *file = fopen(DATABASE_FILE, "r");
+    FILE *temp = fopen(TEMP_FILE, "w");
 
     if (file == NULL || temp == NULL)
     {
@@ -238,8 +240,8 @@ StudentResponse *delete_student_1_svc(StudentRequest *request, struct svc_req *r
 
     if (found)
     {
-        remove("students.dat");
-        rename(temp_file, "students.dat");
+        remove(DATABASE_FILE);
+        rename(TEMP_FILE, DATABASE_FILE);
 
         response.success = 1;
         response.message = strdup("Student deleted successfully");
@@ -251,7 +253,7 @@ StudentResponse *delete_student_1_svc(StudentRequest *request, struct svc_req *r
     }
     else
     {
-        remove(temp_file);
+        remove(TEMP_FILE);
 
         response.success = 0;
         response.message = strdup("Student not found");

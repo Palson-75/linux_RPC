@@ -3,3 +3,6 @@ student_server
 student_client
 students_temp.dat
 students.dat
+serverstorage/students.dat
+serverstorage/students_temp.dat
+tests/test_rpc
