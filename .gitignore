@@ -1,0 +1,5 @@
+*.o
+student_server
+student_client
+students_temp.dat
+students.dat
